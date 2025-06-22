@@ -82,7 +82,7 @@ def cli():
 
 @cli.command()
 @click.option('--download_links', type=str, default='cc12m_links.txt')
-@click.option('--output_folder', type=str, default='/network/rit/dgx/dgx_Yelab/kevin_rojas/datasets/latent_sam')
+@click.option('--output_folder', type=str, default='datasets/latent_sam')
 @click.option('--target_size', type=int, default=256)
 @click.option('--batch_size', type=int, default=256)
 @click.option('--num_workers', type=int, default=6)
@@ -143,7 +143,7 @@ def main(download_links, output_folder, target_size, batch_size, num_workers):
 @cli.command()
 @click.option('--tokenizer', type=click.Choice(['clip']), default='clip')
 @click.option('--block_size', type=int, default=120)
-@click.option('--output_folder', type=str, default='/network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/tokens')
+@click.option('--output_folder', type=str, default='datasets/tokens')
 def process_captions(tokenizer, block_size, output_folder):
     dist.init_process_group(backend='nccl')
     rank = dist.get_rank()
@@ -191,7 +191,7 @@ def process_folder_chunk(inputs):
 
 @cli.command()
 @click.option('--prefix', type=str, default='')
-@click.option('--folder', type=str, default='/network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/')
+@click.option('--folder', type=str, default='datasets/')
 @click.option('--num_workers', type=int, default=8)
 def process_indexes(folder, num_workers, prefix):
     total_folders = 1118
