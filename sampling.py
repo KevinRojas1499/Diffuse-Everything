@@ -65,7 +65,7 @@ def initialize_model_and_components(opts):
     
     if opts.load_checkpoint is not None:
         ckpt = torch.load(os.path.join(opts.load_checkpoint), weights_only=True, map_location=f'cuda:{device}')
-        # ckpt = ckpt['ema' if opts.use_ema else 'model']
+        ckpt = ckpt['ema' if opts.use_ema else 'model']
         model.load_state_dict(ckpt, strict=False)
         dist.barrier(device_ids=[device])
     
