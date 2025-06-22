@@ -1,0 +1,7 @@
+image_folder_path: /network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/images
+text_folder_path: /network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/tokens
+fid_ref_stats: 'fid_ref_stats/coco_fid_ref_stats.npy'
+prefix: 'sa_'
+block_size: 120
+tokenizer_version: clip 
+index_path: /network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/all_indexes.npy

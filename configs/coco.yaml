@@ -1,0 +1,6 @@
+image_folder_path: /network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/latent_coco/images
+text_folder_path: /network/rit/lab/Yelab/kevin-back/kevin_rojas/datasets/latent_coco/tokens
+fid_ref_stats: 'fid_ref_stats/coco_fid_ref_stats.npy'
+block_size: 120
+tokenizer_version: clip 
+dataset_size: 82783

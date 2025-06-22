@@ -1,0 +1,5 @@
+path: '/network/rit/dgx/dgx_Yelab/kevin_rojas/datasets/cob-200'
+fid_ref_stats: 'fid_ref_stats/cub_fid_ref_stats.npy'
+res: 64
+block_size: 20
+tokenizer_version: clip
