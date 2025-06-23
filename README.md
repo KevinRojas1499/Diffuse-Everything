@@ -45,7 +45,7 @@ Specifically, in **Diffuse Everything**, we allow the diffusion process on each 
 1. Clone the repository:
 ```bash
 git clone [repository-url]
-cd Multimodal-Diffusion
+cd Diffuse-Everything
 ```
 
 2. Install the dependencies:
