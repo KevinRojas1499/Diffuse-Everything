@@ -322,7 +322,7 @@ def sample_dataset_conditional(**opts):
 @click.option('--dataset_config_path',type=str, default='configs/sam_llava.yaml')
 @click.option('--net_config_path',type=str, default='configs/mmdit.yaml')
 @click.option('--sde',type=click.Choice(['vp']), default='vp')
-@click.option('--prompt',type=str, default='coco-captions.json')
+@click.option('--prompt',type=str, default='fid_computation/coco-captions.json')
 @click.option('--num_steps', type=int, default=50)
 @click.option('--cfg_scale', type=float, default=1.)
 @click.option('--guidance_final_time', type=float, default=1.)

@@ -283,7 +283,7 @@ def training(**opts):
                         n_eval_iters = (opts.eval_num + samp_batch_size - 1) // samp_batch_size
                         
                         if not is_multimodal: 
-                            file = 'coco-captions.json'
+                            file = 'fid_computation/coco-captions.json'
                             with open(file, 'r') as file:
                                 prompt = json.load(file)['text']
 

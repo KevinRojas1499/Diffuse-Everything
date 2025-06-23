@@ -148,7 +148,7 @@ torchrun --nproc_per_node=8 sampling.py sampling-conditional \
                     --guidance_right .8 \
                     --seed 42 --batch_size 512 \
                     --limit_context_len 40 \
-                    --prompt coco-captions.json 
+                    --prompt fid_computation/coco-captions.json 
 ```
 ### FID Evaluation
 You can then evaluate FID by using the following command:
