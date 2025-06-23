@@ -1,0 +1,9 @@
+*.pyc
+wandb/
+*.png
+*.pt
+*.pkl
+*.out
+experiments/*
+*.ckpt
+*.txt

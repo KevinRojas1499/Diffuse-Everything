@@ -1,0 +1,9 @@
+patch_size: 2
+depth: 8 
+text_depth: 6
+image_depth: 6 
+dim_modalities: [1024, 1024] # Dim Text, Dim Image
+dim_conds: [1024, 1024] # Dim Text, Dim Image
+dim_joint_attn: 1024
+qk_rmsnorm: True
+flash_attn: True
