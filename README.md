@@ -79,7 +79,7 @@ Finally update the `configs/sam_llava.yaml` file with the paths to your files.
 ## Training
 We use wandb to check our training. If wandb is enabled we will log images every `--log_rate` iterations. These will be generated either conditionally if only  one modality is being trained or unconditionally. In both cases the result will be without using guidance, so samples will look worse, and should be understood as rough guidelines. 
 
-We also perform FID evaluation every `--eval_rate` iterations without guidance. To do so you will need the coco reference statistics, which can be downloaded [https://drive.google.com/drive/folders/11fT6UlL2h8PXPRjb8ogcLr9klkYA-UTN?usp=sharing](here).  For other options please consult the `training.py` file.
+We also perform FID evaluation every `--eval_rate` iterations without guidance. To do so you will need the coco reference statistics, which can be downloaded [here](https://drive.google.com/drive/folders/11fT6UlL2h8PXPRjb8ogcLr9klkYA-UTN?usp=sharing).  For other options please consult the `training.py` file.
 
 
 ### Basic Training
@@ -202,4 +202,4 @@ If you find our work and repo help, we would appreciate your citations :smiling_
 ```
 
 ## Acknowledgments
-This project builds upon the SAM-LLaVA dataset introduced in Pixart-α. For the architecture we branched off of the great implementation from lucid rains. Other repos that have been useful in building this repo were score_sde, edm, uvit and DiT.
+This project builds upon the SAM-LLaVA dataset introduced in Pixart-α. For the architecture we branched off of the great implementation from lucid rains. Other repos that have been useful in building this repo were score_sde, sedd, edm, uvit and DiT.
