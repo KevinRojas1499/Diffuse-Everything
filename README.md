@@ -38,8 +38,12 @@ pip install -r requirements.txt
 ```
 
 ## Dataset Preparation
-We provide scripts to download and preprocess the dataset. Because the SAM dataset is too heavy, we erase the original files after processing them into the latent space.  Please follow the steps as clearly outlined, you should only need to set `your_folder` or other variables, but do include the `images, tokens` as described in the scripts.
-For the SAM dataset you need to download the file containing the links to the raw data from [SAM download](https://ai.meta.com/datasets/segment-anything-downloads/p). If this file is named `cc12m_links.txt` you can use the following script to download the dataset using 8 gpus:
+We provide scripts to download and preprocess the dataset. Because the SAM dataset is too heavy, we erase the original files after processing them into the latent space.  Please follow the steps as clearly outlined, you should only need to set `your_folder` or other variables like resolution, but do include the `images, tokens` as described in the scripts.
+For the SAM dataset you need to download the file containing the links to the raw data from [SAM download](https://ai.meta.com/datasets/segment-anything-downloads/), please delete the first line of that file so that each line is of the form:
+```
+sa_000020.tar	link
+```
+If your file with links is named `cc12m_links.txt` you can use the following script to download the dataset using 8 gpus:
 ```bash
 torchrun --nproc-per-node 8 download_sam.py main --download_links cc12m_links.txt --output_folder your_folder/images --target_size 256 --batch_size 256 
 ```
