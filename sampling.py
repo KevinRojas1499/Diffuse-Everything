@@ -68,6 +68,12 @@ def initialize_model_and_components(opts):
         ckpt = ckpt['ema' if opts.use_ema else 'model']
         model.load_state_dict(ckpt, strict=False)
         dist.barrier(device_ids=[device])
+    else:
+        # Load from huggingface
+        model = get_model(opts.model, img_res, 
+                         vocab_size + 1,
+                         context_len, dataset.num_channels, net_opts)
+        model = model.from_pretrained("KevinRojas1499/diffuse-everything")
     
     model = get_preconditioned_model(model, sde, graph, tokenizer).to(device)
     model.eval()

@@ -74,7 +74,7 @@ torchrun training.py \
     --net_config_path configs/mmdit.yaml \
     --enable_wandb
 ```
-**Stage 2 Training** In this stage set `text-depth` to your desired value in `mmdit.yaml`. When loading the checkpoint since the model has changed, you need to comment out the line where the optimizer is loaded. Additionally you should load from the EMA so that the weights are correct.
+**Stage 2 Training** In this stage set `text-depth` to your desired value in `mmdit.yaml`. When loading the checkpoint since the model has changed, you need to comment out the line where the optimizer is loaded. Additionally you should load from the EMA so that the weights are correct. You can also freeze the continuous component if you wish using `--freeze_image`. This can be helpful if you want to preserve the result from the previous stage.
 ```bash
 torchrun training.py \
     --modality multimodal \
@@ -88,7 +88,7 @@ torchrun training.py \
     --load_checkpoint ckpt_path \
     --enable_wandb
 ```
-**Stage 3 Training** In the final stage we train the model for a couple extra iterations on all tasks. We recommend carefully following the A sample command is:
+**Stage 3 Training** In the final stage we train the model for a couple extra iterations on all tasks. This stage can be tricky as it could destroy the previous learned features, so track your training carefully. A sample command is:
 ```bash
 torchrun training.py \
     --modality multimodal \
@@ -102,7 +102,7 @@ torchrun training.py \
 ```
 
 ## Sampling
-
+By default the commands here will download the model from hugginface. If you wish to sample from a model you are training use the `--load_checkpoint` flag.
 ### Unconditional Sampling
 You can generate samples using a trained model. For example to generate 64 images using 4 gpus you can use the command:
 
@@ -110,7 +110,6 @@ You can generate samples using a trained model. For example to generate 64 image
 torchrun --nproc_per_node=4 sampling.py sampling \
                 --guidance_final_time {final_time} \
                 --dir {folder_name} \
-                --load_checkpoint {checkpoint} \
                 --num_steps 50 \
                 --cfg_scale 5. \
                 --guidance_left .3 \
@@ -126,7 +125,6 @@ If you have downloaded the dataset following the instructions above, you can sam
 torchrun --nproc_per_node=8 sampling.py sample-dataset-conditional \
                     --modality continuous \
                     --dir ${folder_name} \
-                    --load_checkpoint checkpoint \
                     --num_steps 50 \
                     --cfg_scale 5. \
                     --guidance_left .3 \
@@ -140,7 +138,6 @@ You can also generate images from a `.json` file with prompts. You can use the f
 ```bash
 torchrun --nproc_per_node=8 sampling.py sampling-conditional \
                     --dir ${folder_name} \
-                    --load_checkpoint checkpoint \
                     --num_steps 50 \
                     --cfg_scale 5. \
                     --guidance_left .3 \
@@ -148,7 +145,6 @@ torchrun --nproc_per_node=8 sampling.py sampling-conditional \
                     --seed 42 --batch_size 512 \
                     --limit_context_len 40 \
                     --prompt coco-captions.json \
-                    --repeat_text
 ```
 ### FID Evaluation
 You can reproduce the result in our main paper by running the following command:
