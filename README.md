@@ -32,6 +32,8 @@ cd Multimodal-Diffusion
 
 2. Install the dependencies:
 ```bash
+conda create -n diff-every python=3.12
+conda activate diff-every
 pip install -r requirements.txt
 ```
 
@@ -55,17 +57,18 @@ Finally update the `configs/sam_llava.yaml` file with the paths to your files.
 ## Training
 We use wandb to check our training. If wandb is enabled we will log images every `--log_rate` iterations. These will be generated either conditionally if only  one modality is being trained or unconditionally. In both cases the result will be without using guidance, so samples will look worse, and should be understood as rough guidelines. 
 
-We also perform FID evaluation every `--eval_rate` iterations without guidance. For other options please consult the `training.py` file.
+We also perform FID evaluation every `--eval_rate` iterations without guidance. To do so you will need the coco reference statistics, which can be downloaded [https://drive.google.com/drive/folders/11fT6UlL2h8PXPRjb8ogcLr9klkYA-UTN?usp=sharing](here).  For other options please consult the `training.py` file.
 
 
 ### Basic Training
 
-To start training you can use one of the followin commands. We recommend using the training strategy that we recommended in our paper, as otherwise it can be hard for the model to learn all tasks appropriately. Special emphasis should be placed to the text to image task. 
+To start training you can use one of the followin commands. We recommend using the training strategy that we recommended in our paper, as otherwise it can be hard for the model to learn all tasks appropriately. Special emphasis should be placed to the text to image task. Our commands are for 8 gpus.
+ 
 
 **Stage 1 Training** In this stage we train the noisy text to image model. For this stage make sure to set `text-depth` to 0 in the `mmdit.yaml`. A sample command to train is as follows:
 
 ```bash
-torchrun training.py \
+torchrun --nproc-per-node 8 training.py \
     --modality continuous \
     --use_all_times \
     --batch_size 256 \
@@ -76,7 +79,7 @@ torchrun training.py \
 ```
 **Stage 2 Training** In this stage set `text-depth` to your desired value in `mmdit.yaml`. When loading the checkpoint since the model has changed, you need to comment out the line where the optimizer is loaded. Additionally you should load from the EMA so that the weights are correct. You can also freeze the continuous component if you wish using `--freeze_image`. This can be helpful if you want to preserve the result from the previous stage.
 ```bash
-torchrun training.py \
+torchrun --nproc-per-node 8 training.py \
     --modality multimodal \
     --use_all_times \
     --freeze_joint \
@@ -90,7 +93,7 @@ torchrun training.py \
 ```
 **Stage 3 Training** In the final stage we train the model for a couple extra iterations on all tasks. This stage can be tricky as it could destroy the previous learned features, so track your training carefully. A sample command is:
 ```bash
-torchrun training.py \
+torchrun --nproc-per-node 8 training.py \
     --modality multimodal \
     --use_all_times \
     --batch_size 256 \
@@ -104,51 +107,46 @@ torchrun training.py \
 ## Sampling
 By default the commands here will download the model from hugginface. If you wish to sample from a model you are training use the `--load_checkpoint` flag.
 ### Unconditional Sampling
-You can generate samples using a trained model. For example to generate 64 images using 4 gpus you can use the command:
+You can generate samples using a trained model. For example to generate 16 images you can use the command:
 
 ```bash
-torchrun --nproc_per_node=4 sampling.py sampling \
-                --guidance_final_time {final_time} \
-                --dir {folder_name} \
+torchrun  sampling.py sampling \
+                --dir out \
                 --num_steps 50 \
-                --cfg_scale 5. \
-                --guidance_left .3 \
-                --guidance_right .8 \
-                --num_samples 64 \
-                --batch_size 64 \
-                --seed 42
+                --cfg_scale 4. \
+                --num_samples 16 \
+                --batch_size 16 \
+                --seed 42 \
+                --plot_with_text
 ```
 
 ### Conditional Sampling
 If you have downloaded the dataset following the instructions above, you can sample conditionally by looping over the dataset using the following command:
 ```bash
-torchrun --nproc_per_node=8 sampling.py sample-dataset-conditional \
+torchrun sampling.py sample-dataset-conditional \
                     --modality continuous \
-                    --dir ${folder_name} \
+                    --dir out \
                     --num_steps 50 \
-                    --cfg_scale 5. \
+                    --cfg_scale 4. \
                     --guidance_left .3 \
                     --guidance_right .8 \
-                    --seed 42 --batch_size 512 \
-                    --repeat_text
+                    --seed 42 --batch_size 16 \
 ```
 You can change the modality to `discrete` to generate samples from text to image.
 
 You can also generate images from a `.json` file with prompts. You can use the following command. We provide the captions that we used to evaluate FID in the `coco-captions.json` file. 
 ```bash
 torchrun --nproc_per_node=8 sampling.py sampling-conditional \
-                    --dir ${folder_name} \
+                    --dir out \
                     --num_steps 50 \
                     --cfg_scale 5. \
                     --guidance_left .3 \
                     --guidance_right .8 \
                     --seed 42 --batch_size 512 \
                     --limit_context_len 40 \
-                    --prompt coco-captions.json \
+                    --prompt coco-captions.json 
 ```
 ### FID Evaluation
-You can reproduce the result in our main paper by running the following command:
-
 You can then evaluate FID by using the following command:
 
 ```bash

@@ -270,22 +270,22 @@ def training(**opts):
                         
             
             with torch.no_grad():
-                if training_iter > 0 and training_iter%opts.eval_rate == 0:
+                if training_iter > 0 and training_iter%opts.eval_rate == 0 and dataset_opts.fid_ref_stats is not None:
                     model.eval()
                     save_path = os.path.join(opts.dir, f'fid_{training_iter}/')
                     os.makedirs(save_path, exist_ok=True)
                     if rank == 0:
                         save_ckpt(model, ema, opt, scheduler, os.path.join(save_path, f'{training_iter}_snapshot.pt'))
 
-                    if opts.dataset in ['sam','coco','cub-200']:
+                    if opts.dataset in ['sam']:
                         samp_batch_size = opts.eval_batch_size
                         n_samples = samp_batch_size//world_size
                         n_eval_iters = (opts.eval_num + samp_batch_size - 1) // samp_batch_size
                         
                         if not is_multimodal: 
-                            file = 'data.json'
+                            file = 'coco-captions.json'
                             with open(file, 'r') as file:
-                                prompt = json.load(file)['text']  # Load the JSON data into a Python dictionary
+                                prompt = json.load(file)['text']
 
                             rank_prompts = prompt[dist.get_rank() :: dist.get_world_size()]
                         cont_shape  = (n_samples,dataset.num_channels,dataset.res,dataset.res)
